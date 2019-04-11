@@ -1,0 +1,69 @@
+<style>
+
+	body {background-color: lightblue;}
+
+	form{
+		width: 50%;
+		min-width: 500px;
+		margin: auto;
+		border: 1px solid blue ;
+		background-color: white;
+		border-radius: 10px; 
+		padding: 10px;
+	}
+	
+	table{
+		width: 50%;
+		margin: auto;
+		}
+
+</style>
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<form action="login.php" onsubmit="return f()" autocomplete="off">
+	<table cellpadding="10px">
+		<tr>
+			<td colspan="2"><img src="captcha.php"><br></td><td></td>
+		</tr>
+		<tr>
+			<td>Enter text in the image above:</td>
+			<td><input type="text" size=13 name="captry" id="captry" autocomplete="off" required autofocus placeholder="captcha"></td>
+		</tr>
+
+		<tr>
+			<td>Enter your UCID:</td> 
+			<td><input type="text" size=13 name="UCID" id="UCID" autocomplete="off" required placeholder="UCID"></td>
+		</tr>
+
+		<tr>
+			<td>Enter your credentials:</td> 
+			<td><input type="text" size=13 name="pass" id="pass" autocomplete="off" required placeholder="password"></td>
+		</tr>
+		
+		<tr>
+			<td><input type="submit" value="Submit"></td>
+		</tr>
+	</table>
+</form>
+
+<script>
+//tests if either captcha field or credentials feild are empty or not
+// if empty alert user and block submission, else don't block
+function f(){
+	cap  = document.getElementById("captry").value.trim();
+	ucid = document.getElementById("UCID").value.trim();
+	pass = document.getElementById("pass").value.trim();
+
+	if( cap == "" || ucid == "" || pass == "" )
+	{
+		alert("Please enter the captcha or UCID or password!");
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+</script>

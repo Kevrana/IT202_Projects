@@ -1,0 +1,144 @@
+<style>
+body{
+	background-image: radial-gradient(circle, red, white , blue);
+	}
+	
+#box{
+	width: 30%;
+	min-height: 600px;
+	min-width:  300px;
+	margin: auto;
+	border: 5px solid blue ;
+	background-color: white;
+	border-radius: 10px; 
+	padding: 10px;
+	}
+	
+table{
+	margin: auto;
+	}
+	
+h1	{
+	text-align: center;
+	color: blue; 
+	}
+	
+#WAIT {
+	margin: auto; 
+	border: 20px solid red;
+	border-top: 20px solid blue;
+	border-radius: 50%;
+	
+	width:100px;
+	height: 100px;
+	animation: spinner 1s linear infinite;
+	}
+	
+	@keyframes spinner{
+	0%   { transform: rotate(0deg)  ; background: white ;  width: 100px; height: 100px; }
+	50%  { transform: rotate(360deg); background: cyan  ;  width: 50px ; height: 50px ; }
+	100% { transform: rotate(360deg); background: white ;  width: 100px; height: 100px; }
+	}
+
+
+#B{
+	color: red;
+	font-family: courier;
+	font-size: 150%;
+}
+	
+</style>
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		
+ <script type = "text/javascript"> 
+ $(document).ready( function(){
+ 
+ // hides the waiting spinner logo
+ $("#WAIT").hide();
+ 
+   $("button").click(function(){ 
+   // hides contents of #b div tag each time button is clicked
+	 $("#B").hide();
+     var zip = $("#zip").val();
+	 
+     if(zip != ''){
+         
+		 $.ajax({
+             type: 		"GET",
+             url: 		"weather.php",
+             data: 		"zip="+zip,
+             
+             
+		     beforeSend: function(){ 
+							// shows the waiting spinner logo
+			                  $("#WAIT").show();                },
+         
+			 error: 		function(xhr, status, error) {  
+							  alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   },
+			 
+			 success: 	function(result){
+				// hides the waiting spinner logo
+				 $("#WAIT").hide();
+				r = JSON.parse(result);
+				
+				// gets the icon code from json, and puts it in url to get icon for that code
+				d = "<img src='http://openweathermap.org/img/w/" + r.weather[0].icon + ".png'>";
+				
+
+				res =  "<br>City: "			  + r.name+  " "				  		    +		                          // name property 			
+					   "<br>Coordinates: "    + r.coord.lon + " , " 	  + r.coord.lat +								  // longitude and latitude properties
+					   "<br>Temperature: " 	  + r.main.temp + "&deg;C , " + ((1.8) * r.main.temp + 32 )	+ "&deg;F "		+ // main's temp in C and F, f=1.8*C + 32				
+				       "<br>Weather: " 		  + r.weather[0].main + " "		  		    +								  // weather's main property
+					   "<br>Description: "    + r.weather[0].description + " "		    +								  // weather's description property 
+					   "<br>Humidity: "       + r.main.humidity + "% "		            +								  // main's humidity property
+					   "<br>Wind speed (m/s): "     + r.wind.speed + " m/s "		    +								  // wind's speed property
+					   "<br>Wind speed (miles/s): " + ( (r.wind.speed) * ( 1/1609.344 )) + " mi/s "		    +			  // wind's speed property  in miles/sec. mi/s = (1m/s)*((1mi/s)/(1609.344m/s))
+					   "<br>Sunrise/epoch: "  + r.sys.sunrise + " "			  		    +								  // sunrise/epoch property
+					   "<br>Icon: "           + d	                                    +								  // weather's description property 
+					   "<br>";
+				// shows the contents of #b div 
+				$("#B").show();
+				$("#B").html(res);
+				
+			}	//success  - the } closes the definition or body of the function(result){ ...
+		});	    //ajax  - the }) closes the  $.ajax({ ... the } closes the JSOn argument, and ) matches opening ( 
+     };			//the }  closes the if(zip != '')  {  ....
+  });			//anonymous fn handler for button click: } closes the body of code...the ) closes the click (   )
+});				//the  })  closes the ready event anonymous handler:  ready( function(){ ....
+     
+</script>
+</head>
+<body>
+<div id="box">
+	<h1> Weather Report</h1>
+	<hr>
+	<table>
+		<tr>
+			<td align="center">
+				<input 	id = "zip" type = "number" name = "zip" placeholder="Zipcode" autocomplete="off" min="0" required>
+	
+				<button id = "btn" type = "BUTTON"><b>REQUEST WEATHER</b></button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<br>
+				<div id= "WAIT" style="display:none"></div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div id= "B"></div>
+				<br>
+			</td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>
